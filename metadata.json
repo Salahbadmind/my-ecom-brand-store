@@ -1,0 +1,6 @@
+{
+  "name": "SBB Tech Store",
+  "description": "A high-performance tech e-commerce platform with an admin panel, secure login, real-time product search, and persistent shopping cart sync.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

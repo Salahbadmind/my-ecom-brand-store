@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if the user is accessing their own data
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Helper function to check if user is an Admin
+    // We check if the user's document in the users collection has isAdmin == true,
+    // or if they are using a designated admin email (fallback/failsafe).
+    function isAdmin() {
+      return isAuthenticated() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true ||
+        request.auth.token.email == "admin@sbbtechstore.com" ||
+        request.auth.token.email == "sbouragbi5@gmail.com"
+      );
+    }
+
+    // 1. Products Collection Rules
+    match /products/{productId} {
+      // Products can be read by anyone
+      allow read: if true;
+      
+      // Creating, updating, or deleting products requires Admin permissions
+      allow write: if isAdmin();
+    }
+
+    // 2. Users Collection Rules
+    match /users/{userId} {
+      // Users can read and write their own profile and cart
+      allow read, write: if isOwner(userId);
+      
+      // Admins can read user profiles if needed for order management
+      allow read: if isAdmin();
+    }
+
+    // 3. Orders Collection Rules
+    match /orders/{orderId} {
+      // Allow any user (authenticated or guest) to create an order
+      allow create: if true;
+      
+      // Users can read their own orders; Admins can read all orders
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      
+      // Only admins can update or delete orders (e.g. changing status to Shipped/Completed)
+      allow update, delete: if isAdmin();
+    }
+  }
+}

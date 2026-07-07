@@ -1,0 +1,124 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "An e-commerce product available in the tech store",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the product"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the tech product"
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of the product in USD"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the product (e.g., Laptops, Accessories, Phones)"
+        },
+        "imageURL": {
+          "type": "string",
+          "description": "URL of the product image"
+        },
+        "stockCount": {
+          "type": "integer",
+          "description": "Available inventory count"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the product"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the product was added"
+        }
+      },
+      "required": ["id", "name", "price", "category", "imageURL", "stockCount", "description"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile with cart items and order history",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth unique user ID"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User's full name or display name"
+        },
+        "cartItems": {
+          "type": "array",
+          "description": "Items currently in the shopping cart"
+        },
+        "orderHistory": {
+          "type": "array",
+          "description": "List of order summaries or references"
+        }
+      },
+      "required": ["uid", "email", "displayName"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "An order created by a customer",
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "description": "Unique identifier of the order"
+        },
+        "userId": {
+          "type": "string",
+          "description": "ID of the user who placed the order"
+        },
+        "items": {
+          "type": "array",
+          "description": "Items ordered"
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "Total checkout price in USD"
+        },
+        "status": {
+          "type": "string",
+          "description": "Order status (e.g., Pending, Shipped, Completed)"
+        },
+        "shippingAddress": {
+          "type": "string",
+          "description": "Full shipping address text"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the order was placed"
+        }
+      },
+      "required": ["orderId", "userId", "items", "totalAmount", "status", "shippingAddress", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Available products in the store"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile and shopping cart data"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "E-commerce customer orders"
+    }
+  }
+}
